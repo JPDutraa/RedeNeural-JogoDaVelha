@@ -64,7 +64,11 @@ def is_game_over(board):
     return True
 
 # Função para treinar a rede neural jogando partidas aleatórias
-def train_model(model, games=50):
+# games = 1000 por padrão - pode ser alterado para treinar mais ou menos
+# Quanto menos, mais rápido o treinamento será feito (e menos eficiente)
+# Quanto mais, mais lento o treinamento será feito (e mais eficiente)
+
+def train_model(model, games=100): 
     print('Etapa 1: Inicializando memória de treinamento')
     memory = deque(maxlen=2000)
 
