@@ -7,6 +7,16 @@ from collections import deque
 import random
 import tkinter as tk
 from datetime import datetime
+import matplotlib.pyplot as plt
+
+
+# Função para criar a figura e o eixo do gráfico
+def create_training_plot():
+    fig, ax = plt.subplots()
+    ax.set_xlabel("Episódio")
+    ax.set_ylabel("Loss")
+    ax.set_title("Progresso do treinamento da rede neural")
+    return fig, ax
 
 # Função para criar o modelo de rede neural
 def create_model():
@@ -68,9 +78,10 @@ def is_game_over(board):
 # Quanto menos, mais rápido o treinamento será feito (e menos eficiente)
 # Quanto mais, mais lento o treinamento será feito (e mais eficiente)
 
-def train_model(model, games=100): 
+def train_model(model, games=10): 
     print('Etapa 1: Inicializando memória de treinamento')
     memory = deque(maxlen=2000)
+    loss_values = []
 
     for game in range(games):
         print(f'Etapa 2: Iniciando jogo {game + 1} - {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}')
@@ -96,6 +107,10 @@ def train_model(model, games=100):
                     target_f = model.predict(np.array([old_board]))
                     target_f[0][move[0] * 3 + move[1]] = target
                     model.fit(np.array([old_board]), target_f, epochs=1, verbose=0)
+                    history = model.fit(np.array([old_board]), target_f, epochs=1, verbose=0)
+                    loss_values.append(history.history["loss"][0])
+
+    return loss_values # Retorne os valores de perda para plotagem
 
 # Função para escolher o próximo movimento da IA
 def choose_best_move(model, board):
@@ -260,7 +275,9 @@ def play_against_model_gui(model):
 
 # Treinar o modelo e jogar contra a IA usando a interface gráfica
 model = create_model()
-train_model(model)
+loss_values = train_model(model)
+fig, ax = create_training_plot()
+ax.plot(loss_values)
+plt.savefig('training_loss_graph.png')
 play_against_model_gui(model)
-
 
