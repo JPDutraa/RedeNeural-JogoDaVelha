@@ -78,7 +78,7 @@ def is_game_over(board):
 # Quanto menos, mais rápido o treinamento será feito (e menos eficiente)
 # Quanto mais, mais lento o treinamento será feito (e mais eficiente)
 
-def train_model(model, games=10): 
+def train_model(model, games=1000): 
     print('Etapa 1: Inicializando memória de treinamento')
     memory = deque(maxlen=2000)
     loss_values = []
